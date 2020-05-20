@@ -1,0 +1,39 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Sprites/Backgrounds/Background.png" type="Texture" id=1]
+[ext_resource path="res://Sprites/Backgrounds/Floor.png" type="Texture" id=2]
+[ext_resource path="res://Scripts/SceneBackground.cs" type="Script" id=3]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 641.737, 52.0477 )
+
+[node name="SceneBackground" type="ParallaxBackground"]
+script = ExtResource( 3 )
+
+[node name="Background" type="ParallaxLayer" parent="."]
+motion_scale = Vector2( 0.2, 1 )
+motion_mirroring = Vector2( 960, 0 )
+
+[node name="Background" type="Sprite" parent="Background"]
+scale = Vector2( 1.5, 1.5 )
+texture = ExtResource( 1 )
+centered = false
+
+[node name="Floor" type="ParallaxLayer" parent="."]
+motion_mirroring = Vector2( 960, 0 )
+
+[node name="Floor" type="Sprite" parent="Floor"]
+scale = Vector2( 1.5, 1.5 )
+texture = ExtResource( 2 )
+centered = false
+
+[node name="StaticFloor" type="StaticBody2D" parent="." groups=[
+"Floor",
+]]
+position = Vector2( 536.583, 507.819 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Collision" type="CollisionShape2D" parent="StaticFloor"]
+shape = SubResource( 1 )
