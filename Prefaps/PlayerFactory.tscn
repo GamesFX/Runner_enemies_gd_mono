@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Prefaps/Player.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Scripts/FactoryPlayer.cs" type="Script" id=2]
+
+[node name="Factory" type="Position2D" groups=[
+"p_spawn",
+]]
+script = ExtResource( 2 )
+__meta__ = {
+"_gizmo_extents_": 50.0
+}
+TargetScene = ExtResource( 1 )
