@@ -1,5 +1,4 @@
 ﻿using Godot;
-using RunnerEnemyGD.Scripts.Core;
 using System;
 using System.Collections.Generic;
 
@@ -28,7 +27,7 @@ namespace RunnerEnemyGD.Scripts {
 		/// <summary>
 		/// Game controller configuration.
 		/// </summary>
-		private Dictionary<string, object> _configuration;
+		private readonly Dictionary<string, object> _configuration;
 
 		/// <summary>
 		/// Access to configuration controller property.
@@ -42,6 +41,19 @@ namespace RunnerEnemyGD.Scripts {
 				EmitSignal(nameof(ConfigurationChanged), key);
 			}
 		}
+
+		/// <summary>
+		/// Paused property
+		/// </summary>
+		public bool Paused {
+			get => GetConfiguration<bool>("Paused");
+			private set => this["Paused"] = value;
+		}
+
+		/// <summary>
+		/// Save factory player
+		/// </summary>
+		private FactoryPlayer _factoryPlayer;
 
 		/// <summary>
 		/// Primary constructor.
@@ -92,6 +104,9 @@ namespace RunnerEnemyGD.Scripts {
 
 			this["CurrentTime"] = 0f;
 			this["VelocityTime"] = 0f;
+
+			// Search factory player
+			SearchFactoryPlater();
 		}
 
 		/// <summary>
@@ -134,6 +149,23 @@ namespace RunnerEnemyGD.Scripts {
 			this["Score"] = localScoreGame + amount;
 		}
 
+		/// <summary>
+		/// Search factory player
+		/// </summary>
+		private void SearchFactoryPlater() {
+			Godot.Collections.Array nodes = GetTree().GetNodesInGroup("p_spawn");
+
+			// Check empty
+			if (nodes.Count == 0)
+				return;
+			// Check node type
+			Node target = nodes[0] as Node;
+
+			// Set factory
+			if (typeof(Position2D).IsInstanceOfType(target)) {
+				_factoryPlayer = target as FactoryPlayer;
+			}
+		}
 
 	}
 
