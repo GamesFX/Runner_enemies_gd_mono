@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Scripts/EnemyFactory.cs" type="Script" id=1]
+[ext_resource path="res://Prefaps/Enemy.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Sprites/Enemy/Enemy.png" type="Texture" id=3]
+
+[node name="EnemyFactory" type="Position2D"]
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_group_": true,
+"_gizmo_extents_": 50.0
+}
+TargetScene = ExtResource( 2 )
+TimeDiscount = 0.5
+
+[node name="PlaceHolder" type="Sprite" parent="."]
+modulate = Color( 1, 1, 1, 0.498039 )
+scale = Vector2( 1.5, 1.5 )
+texture = ExtResource( 3 )
+region_enabled = true
+region_rect = Rect2( 0, 2, 24, 30 )

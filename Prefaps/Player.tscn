@@ -3,50 +3,49 @@
 [ext_resource path="res://Sprites/Player/Player.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/PlayerController.cs" type="Script" id=2]
 
-[sub_resource type="AnimationNodeAnimation" id=9]
+[sub_resource type="AnimationNodeAnimation" id=1]
 animation = "Die"
 
-[sub_resource type="AnimationNodeAnimation" id=5]
+[sub_resource type="AnimationNodeAnimation" id=2]
 animation = "Idle"
 
-[sub_resource type="AnimationNodeAnimation" id=10]
+[sub_resource type="AnimationNodeAnimation" id=3]
 animation = "Jump"
 
-[sub_resource type="AnimationNodeAnimation" id=11]
+[sub_resource type="AnimationNodeAnimation" id=4]
 animation = "Walk"
 
-[sub_resource type="AnimationNodeStateMachineTransition" id=12]
+[sub_resource type="AnimationNodeStateMachineTransition" id=5]
 
-[sub_resource type="AnimationNodeStateMachineTransition" id=13]
+[sub_resource type="AnimationNodeStateMachineTransition" id=6]
 
-[sub_resource type="AnimationNodeStateMachineTransition" id=14]
+[sub_resource type="AnimationNodeStateMachineTransition" id=7]
 
-[sub_resource type="AnimationNodeStateMachineTransition" id=15]
+[sub_resource type="AnimationNodeStateMachineTransition" id=8]
 
-[sub_resource type="AnimationNodeStateMachineTransition" id=16]
+[sub_resource type="AnimationNodeStateMachineTransition" id=9]
 
-[sub_resource type="AnimationNodeStateMachineTransition" id=17]
+[sub_resource type="AnimationNodeStateMachineTransition" id=10]
 
-[sub_resource type="AnimationNodeStateMachineTransition" id=18]
+[sub_resource type="AnimationNodeStateMachineTransition" id=11]
 
-[sub_resource type="AnimationNodeStateMachine" id=3]
-states/Die/node = SubResource( 9 )
+[sub_resource type="AnimationNodeStateMachine" id=12]
+states/Die/node = SubResource( 1 )
 states/Die/position = Vector2( 301, 70 )
-states/Idle/node = SubResource( 5 )
+states/Idle/node = SubResource( 2 )
 states/Idle/position = Vector2( 301, 193 )
-states/Jump/node = SubResource( 10 )
+states/Jump/node = SubResource( 3 )
 states/Jump/position = Vector2( 519, 70 )
-states/Walk/node = SubResource( 11 )
+states/Walk/node = SubResource( 4 )
 states/Walk/position = Vector2( 519, 193 )
-transitions = [ "Idle", "Walk", SubResource( 12 ), "Walk", "Idle", SubResource( 13 ), "Walk", "Jump", SubResource( 14 ), "Jump", "Walk", SubResource( 15 ), "Idle", "Die", SubResource( 16 ), "Walk", "Die", SubResource( 17 ), "Jump", "Die", SubResource( 18 ) ]
+transitions = [ "Idle", "Walk", SubResource( 5 ), "Walk", "Idle", SubResource( 6 ), "Walk", "Jump", SubResource( 7 ), "Jump", "Walk", SubResource( 8 ), "Idle", "Die", SubResource( 9 ), "Walk", "Die", SubResource( 10 ), "Jump", "Die", SubResource( 11 ) ]
 start_node = "Idle"
 end_node = "Die"
-graph_offset = Vector2( 105, 34 )
+graph_offset = Vector2( 47, 2 )
 
-[sub_resource type="AnimationNodeStateMachinePlayback" id=4]
+[sub_resource type="AnimationNodeStateMachinePlayback" id=13]
 
-[sub_resource type="Animation" id=7]
-resource_name = "Die"
+[sub_resource type="Animation" id=14]
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:region_rect")
 tracks/0/interp = 1
@@ -72,7 +71,7 @@ tracks/1/keys = {
 "values": [ true ]
 }
 
-[sub_resource type="Animation" id=19]
+[sub_resource type="Animation" id=15]
 resource_name = "Idle"
 length = 2.5
 loop = true
@@ -101,8 +100,7 @@ tracks/1/keys = {
 "values": [ false ]
 }
 
-[sub_resource type="Animation" id=8]
-resource_name = "Jump"
+[sub_resource type="Animation" id=16]
 length = 0.001
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:region_rect")
@@ -129,8 +127,7 @@ tracks/1/keys = {
 "values": [ false ]
 }
 
-[sub_resource type="Animation" id=6]
-resource_name = "Walk"
+[sub_resource type="Animation" id=17]
 length = 0.5
 loop = true
 step = 0.01
@@ -159,7 +156,7 @@ tracks/1/keys = {
 "values": [ false ]
 }
 
-[sub_resource type="CapsuleShape2D" id=1]
+[sub_resource type="CapsuleShape2D" id=18]
 radius = 16.6518
 height = 33.1265
 
@@ -174,27 +171,30 @@ script = ExtResource( 2 )
 __meta__ = {
 "_edit_group_": true
 }
-ImpulseJump = Vector2( 0, -450 )
+ImpulseJump = Vector2( 0, -500 )
 
 [node name="AnimationController" type="AnimationTree" parent="."]
-tree_root = SubResource( 3 )
+tree_root = SubResource( 12 )
 anim_player = NodePath("../Animations")
 active = true
-parameters/playback = SubResource( 4 )
+parameters/playback = SubResource( 13 )
 
 [node name="Animations" type="AnimationPlayer" parent="."]
 playback_speed = 31.77
-anims/Die = SubResource( 7 )
-anims/Idle = SubResource( 19 )
-anims/Jump = SubResource( 8 )
-anims/Walk = SubResource( 6 )
+anims/Die = SubResource( 14 )
+anims/Idle = SubResource( 15 )
+anims/Jump = SubResource( 16 )
+anims/Walk = SubResource( 17 )
 
 [node name="Sprite" type="Sprite" parent="."]
 scale = Vector2( 1.5, 1.5 )
 texture = ExtResource( 1 )
 region_enabled = true
-region_rect = Rect2( 63, 6, 30, 48 )
+region_rect = Rect2( 15, 9, 30, 45 )
 
 [node name="Collision" type="CollisionShape2D" parent="."]
 position = Vector2( -0.387421, 0.774845 )
-shape = SubResource( 1 )
+shape = SubResource( 18 )
+
+[node name="Notifier" type="VisibilityNotifier2D" parent="."]
+rect = Rect2( -15, -15, 30, 30 )

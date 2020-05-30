@@ -1,18 +1,34 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Fonts/Pixel_font.tres" type="DynamicFont" id=1]
 [ext_resource path="res://Scripts/GameUI.cs" type="Script" id=2]
 [ext_resource path="res://Fonts/Pixel_font_fps.tres" type="DynamicFont" id=3]
+[ext_resource path="res://Sprites/ui/pause_icon.png" type="Texture" id=4]
+[ext_resource path="res://Sprites/ui/play_icon.png" type="Texture" id=5]
+
+[sub_resource type="StyleBoxFlat" id=3]
+bg_color = Color( 0, 0, 0, 0.392157 )
+
+[sub_resource type="StyleBoxEmpty" id=1]
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 14.308, 16.9279 )
 
 [node name="Control" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+mouse_filter = 2
 script = ExtResource( 2 )
 __meta__ = {
+"_edit_group_": true,
 "_edit_use_anchors_": false
 }
 ScoreLabelPath = NodePath("Score")
 FpsLabelPath = NodePath("Fps")
+PauseButtonPath = NodePath("Buttons/Pause")
+PauseLayer = NodePath("PauseLayer")
+PauseTexture = ExtResource( 4 )
+PlayTexture = ExtResource( 5 )
 
 [node name="Score" type="Label" parent="."]
 anchor_left = 0.5
@@ -50,3 +66,60 @@ uppercase = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="PauseLayer" type="Panel" parent="."]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_styles/panel = SubResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="PauseLayer"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -189.0
+margin_top = -50.0
+margin_right = 189.0
+margin_bottom = 50.0
+custom_fonts/font = ExtResource( 1 )
+text = "Paused"
+align = 1
+valign = 1
+uppercase = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Buttons" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="Pause" type="Button" parent="Buttons"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -84.7675
+margin_top = 20.3443
+margin_right = -40.7675
+margin_bottom = 58.3443
+rect_scale = Vector2( 1.5, 1.5 )
+mouse_default_cursor_shape = 2
+custom_styles/focus = SubResource( 1 )
+action_mode = 0
+icon = ExtResource( 4 )
+flat = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Detector" type="StaticBody2D" parent="Buttons/Pause" groups=[
+"UI",
+]]
+position = Vector2( 22, 19 )
+
+[node name="Collision" type="CollisionShape2D" parent="Buttons/Pause/Detector"]
+shape = SubResource( 2 )
