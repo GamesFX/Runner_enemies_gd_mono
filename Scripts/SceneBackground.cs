@@ -17,6 +17,13 @@ namespace RunnerEnemyGD.Scripts {
 		} = 50f;
 
 		/// <summary>
+		/// Controller
+		/// </summary>
+		public GameController Controller {
+			get; private set;
+		} = GameController.Controller;
+
+		/// <summary>
 		/// Parallax velocity scale.
 		/// </summary>
 		private float _parallaxScaleVelocity;
@@ -26,9 +33,9 @@ namespace RunnerEnemyGD.Scripts {
 		/// </summary>
 		public override void _Ready() {
 			// Set property scale
-			_parallaxScaleVelocity = GameController.Controller.GetConfiguration<float>("VelocityScale");
+			_parallaxScaleVelocity = Controller.GetConfiguration<float>("VelocityScale");
 			// Connect controller signal
-			GameController.Controller.Connect(nameof(GameController.ConfigurationChanged), this, nameof(OnControllerPropertyChanged));
+			Controller.Connect(nameof(GameController.ConfigurationChanged), this, nameof(OnControllerPropertyChanged));
 		}
 
 		/// <summary>
@@ -36,7 +43,8 @@ namespace RunnerEnemyGD.Scripts {
 		/// </summary>
 		/// <param name="delta">Elapsed time between 2 frames</param>
 		public override void _Process(float delta) {
-			ScrollOffset += Vector2.Left * ParallaxVelocity * _parallaxScaleVelocity * delta;
+			if (Controller.Start && !Controller.Paused)
+				ScrollOffset += Vector2.Left * ParallaxVelocity * _parallaxScaleVelocity * delta;
 		}
 
 		/// <summary>
@@ -46,7 +54,7 @@ namespace RunnerEnemyGD.Scripts {
 		private void OnControllerPropertyChanged(string property) {
 			// Verify if velocity scale change
 			if (property.Equals("VelocityScale"))
-				_parallaxScaleVelocity = GameController.Controller.GetConfiguration<float>(property);
+				_parallaxScaleVelocity = Controller.GetConfiguration<float>(property);
 		}
 
 	}

@@ -51,9 +51,17 @@ namespace RunnerEnemyGD.Scripts {
 		}
 
 		/// <summary>
+		/// Start property
+		/// </summary>
+		public bool Start {
+			get => GetConfiguration<bool>("Start");
+			private set => this["Start"] = value;
+		}
+
+		/// <summary>
 		/// Save factory player
 		/// </summary>
-		private FactoryPlayer _factoryPlayer;
+		private PlayerFactory _factoryPlayer;
 
 		/// <summary>
 		/// Primary constructor.
@@ -97,16 +105,13 @@ namespace RunnerEnemyGD.Scripts {
 		/// Initialize all properties.
 		/// </summary>
 		public override void _Ready() {
-			this["Score"] = 0;
-			this["VelocityScale"] = 1f;
-			this["VelocityAmout"] = 0.2f;
-			this["VelocityChangeTime"] = 10f;
-
-			this["CurrentTime"] = 0f;
-			this["VelocityTime"] = 0f;
+			ResetConfiguration();
+			this["Start"] = true;
 
 			// Search factory player
 			SearchFactoryPlater();
+			// Connect configuration changed
+			Connect(nameof(ConfigurationChanged), this, nameof(OnConfigurationChanged));
 		}
 
 		/// <summary>
@@ -114,30 +119,57 @@ namespace RunnerEnemyGD.Scripts {
 		/// </summary>
 		/// <param name="delta">delta time game time</param>
 		public override void _Process(float delta) {
+			// Manage pause behaviour
+			PauseBahaviour();
+
+			// Check if you can play
+			if (!Start || Paused)
+				return;
+
 			// Save current time
 			float localCurrentTime = GetConfiguration<float>("CurrentTime");
 
 			// Check if time is out (one second)
 			if (localCurrentTime >= 1f) {
-				// Save velocity time
-				float localCurrentVelocityTime = GetConfiguration<float>("VelocityTime");
-
-				// Check if time is out
-				if (localCurrentVelocityTime >= GetConfiguration<float>("VelocityChangeTime")) {
-					this["VelocityScale"] = GetConfiguration<float>("VelocityScale") + GetConfiguration<float>("VelocityAmout");
-					_configuration["VelocityTime"] = 0f;
-				}
-
 				// Add score
 				AddScore((int)Math.Round(localCurrentTime));
 
+				// Saved change velocity time
+				int currentScore = GetConfiguration<int>("Score");
+				int changedVelocityTime = GetConfiguration<int>("VelocityChangeTime");
+
+				// Change velocity scale
+				if (currentScore > 0 && currentScore % changedVelocityTime == 0) {
+					float currentScale = GetConfiguration<float>("VelocityScale");
+					float scaleAmount = GetConfiguration<float>("VelocityAmout");
+					float maxScale = GetConfiguration<float>("MaxVelocityScale");
+
+					float resultScale = Mathf.Clamp(currentScale + scaleAmount, 1f, maxScale);
+
+					this["VelocityScale"] = resultScale;
+				}
+
 				// Reset currentTime
 				_configuration["CurrentTime"] = 0f;
-				_configuration["VelocityTime"] = localCurrentVelocityTime + localCurrentTime;
 			}
 
 			// Update current time
 			_configuration["CurrentTime"] = GetConfiguration<float>("CurrentTime") + delta;
+		}
+
+		/// <summary>
+		/// Reset all confituration
+		/// </summary>
+		private void ResetConfiguration() {
+			this["Score"] = 0;
+			this["VelocityScale"] = 1f;
+			this["MaxVelocityScale"] = 10f;
+			this["VelocityAmout"] = 1f;
+			this["VelocityChangeTime"] = 10;
+
+			this["CurrentTime"] = 0f;
+
+			this["Paused"] = false;
 		}
 
 		/// <summary>
@@ -163,9 +195,31 @@ namespace RunnerEnemyGD.Scripts {
 
 			// Set factory
 			if (typeof(Position2D).IsInstanceOfType(target)) {
-				_factoryPlayer = target as FactoryPlayer;
+				_factoryPlayer = target as PlayerFactory;
 			}
 		}
+
+		/// <summary>
+		/// Manage pause
+		/// </summary>
+		private void PauseBahaviour() {
+			if (Input.IsActionJustPressed("ui_pause") && Start)
+				this["Paused"] = !Paused;
+		}
+
+		/// <summary>
+		/// Called when configuration changed
+		/// </summary>
+		/// <param name="field"></param>
+		private void OnConfigurationChanged(string field) {
+			if (field != "Start")
+				return;
+			if (Start)
+				return;
+
+			ResetConfiguration();
+		}
+
 
 	}
 

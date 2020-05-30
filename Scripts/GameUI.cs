@@ -24,6 +24,45 @@ namespace RunnerEnemyGD.Scripts {
 		}
 
 		/// <summary>
+		/// Node path to pause button
+		/// </summary>
+		[Export]
+		public NodePath PauseButtonPath {
+			get; private set;
+		}
+
+		/// <summary>
+		/// Layer with pause text
+		/// </summary>
+		[Export]
+		public NodePath PauseLayer {
+			get; private set;
+		}
+
+		/// <summary>
+		/// Pause image icon
+		/// </summary>
+		[Export]
+		public Texture PauseTexture {
+			get; private set;
+		}
+
+		/// <summary>
+		/// Play image icon
+		/// </summary>
+		[Export]
+		public Texture PlayTexture {
+			get; private set;
+		}
+
+		/// <summary>
+		/// Game controller
+		/// </summary>
+		public GameController Controller {
+			get; private set;
+		} = GameController.Controller;
+
+		/// <summary>
 		/// Score node ui label.
 		/// </summary>
 		private Label _scoreLabelNode;
@@ -32,6 +71,16 @@ namespace RunnerEnemyGD.Scripts {
 		/// Fps node ui label.
 		/// </summary>
 		private Label _fpsLabelNode;
+
+		/// <summary>
+		/// Pause node ui button.
+		/// </summary>
+		private Button _pauseButton;
+
+		/// <summary>
+		/// Pause node ui layer panel
+		/// </summary>
+		private Panel _pauseLayer;
 
 		/// <summary>
 		/// Score number.
@@ -53,8 +102,13 @@ namespace RunnerEnemyGD.Scripts {
 			_scoreLabelNode = GetNode<Label>(ScoreLabelPath);
 			// Set fps label
 			_fpsLabelNode = GetNode<Label>(FpsLabelPath);
+			// Set pause button
+			_pauseButton = GetNode<Button>(PauseButtonPath);
+			// Set pause layer
+			_pauseLayer = GetNode<Panel>(PauseLayer);
 			// Connect signal
-			GameController.Controller.Connect(nameof(GameController.ConfigurationChanged), this, nameof(OnChangeConfiguration));
+			Controller.Connect(nameof(GameController.ConfigurationChanged), this, nameof(OnChangeConfiguration));
+			_pauseButton.Connect("pressed", this, nameof(OnButtonPauseClicked));
 		}
 
 		/// <summary>
@@ -84,17 +138,49 @@ namespace RunnerEnemyGD.Scripts {
 		}
 
 		/// <summary>
+		/// Change button icon
+		/// </summary>
+		private void ChangeButtonIcon() {
+			if (Controller.Paused)
+				_pauseButton.Icon = PlayTexture;
+			if (!Controller.Paused)
+				_pauseButton.Icon = PauseTexture;
+		}
+
+		/// <summary>
+		/// Change pause layer
+		/// </summary>
+		private void ChangePauseLayer() {
+			_pauseLayer.Visible = Controller.Paused;
+		}
+
+		/// <summary>
 		/// Handle change configuration controller.
 		/// </summary>
 		/// <param name="field">property changed.</param>
 		private void OnChangeConfiguration(string field) {
 			// Check property changed
-			if (field.Equals("Score")) {
-				// Update score
-				_gameScore = GameController.Controller.GetConfiguration<int>(field);
-				// Change label content
-				ChangeLabelScore();
+			switch (field) {
+				case "Score":
+					// Update score
+					_gameScore = Controller.GetConfiguration<int>(field);
+					// Change label content
+					ChangeLabelScore();
+					break;
+				case "Paused":
+					ChangeButtonIcon();
+					ChangePauseLayer();
+					break;
 			}
+
+		}
+
+		/// <summary>
+		/// Handle button input
+		/// </summary>
+		private void OnButtonPauseClicked() {
+			if ( Controller.Start )
+				Controller["Paused"] = !Controller.Paused;
 		}
 
 	}
