@@ -6,7 +6,7 @@ namespace RunnerEnemyGD.Scripts {
 	/// <summary>
 	/// Create a custom factory node
 	/// </summary>
-	public class FactoryPlayer : FactoryNode {
+	public class PlayerFactory : FactoryNode {
 
 		/// <summary>
 		/// This signal is used to create player instances
@@ -90,6 +90,7 @@ namespace RunnerEnemyGD.Scripts {
 		/// <param name="node"></param>
 		private void OnInstancedNode(Node node) {
 			CurrentInstance = node as Node2D;
+			CurrentInstance.Connect(nameof(PlayerController.PlayerDestroyed), this, nameof(OnDestroyInstance));
 		}
 
 		/// <summary>
@@ -100,7 +101,6 @@ namespace RunnerEnemyGD.Scripts {
 			if (CurrentInstance == null)
 				return;
 			// Destroy instance and restore values
-			CurrentInstance.QueueFree();
 			CurrentInstance = null;
 		}
 
