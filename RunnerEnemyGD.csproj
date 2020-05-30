@@ -56,7 +56,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scripts\Core\OSType.cs" />
     <Compile Include="Scripts\CustomNodes\FactoryNode.cs" />
-    <Compile Include="Scripts\FactoryPlayer.cs" />
+    <Compile Include="Scripts\EnemyController.cs" />
+    <Compile Include="Scripts\EnemyFactory.cs" />
+    <Compile Include="Scripts\PlayerFactory.cs" />
     <Compile Include="Scripts\GameController.cs" />
     <Compile Include="Scripts\GameUI.cs" />
     <Compile Include="Scripts\PlayerController.cs" />
